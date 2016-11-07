@@ -72,7 +72,18 @@ const Threshold = React.createClass({
     onChange: PropTypes.func.isRequired,
   },
 
+  getInitialState() {
+    return ({needsPeriodControls: true});
+  },
+
   handleDropdownChange(item) {
+    if (item.type === "relation") {
+      if (item.text === "once") {
+        this.setState({needsPeriodControls: false});
+      } else {
+        this.setState({needsPeriodControls: true});
+      }
+    }
     const newValues = Object.assign({}, this.props.rule.values, {[item.type]: item.text});
     this.props.onChange(newValues);
   },
@@ -86,6 +97,7 @@ const Threshold = React.createClass({
 
   render() {
     const {operator, value, relation, percentile, period} = this.props.rule.values;
+    const {needsPeriodControls} = this.state;
 
     function mapToItems(arr, type) {
       return arr.map((text) => {
@@ -97,6 +109,20 @@ const Threshold = React.createClass({
     const relations = mapToItems(RELATIONS, 'relation');
     const periods = mapToItems(PERIODS, 'period');
 
+
+    const handleDropdownChange = this.handleDropdownChange;
+
+    function periodControls() {
+      if (needsPeriodControls) {
+        return (
+          <div>
+            during the last
+            <Dropdown items={periods} selected={period} onChoose={handleDropdownChange} />
+          </div>
+        );
+      }
+    }
+
     return (
       <div className="u-flex u-jc-space-around u-ai-center">
         Value is
@@ -104,8 +130,7 @@ const Threshold = React.createClass({
         <input ref={(r) => this.valueInput = r} defaultValue={value} onKeyUp={this.handleInputChange}></input>
         <Dropdown items={relations} selected={relation} onChoose={this.handleDropdownChange} />
         {relation === 'once' ? null : <input ref={(r) => this.percentileInput = r} defaultValue={percentile} onKeyUp={this.handleInputChange}></input>}
-        during the last
-        <Dropdown items={periods} selected={period} onChoose={this.handleDropdownChange} />
+        {periodControls()}
       </div>
     );
   },
