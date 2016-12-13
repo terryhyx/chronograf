@@ -31,9 +31,7 @@ const ExplorerList = React.createClass({
   },
 
   render() {
-    const {actions, panels, timeRange, queryConfigs, setActiveQuery} = this.props;
-
-    const activePanelID = this.props.activePanelID;
+    const {actions, panels, timeRange, queryConfigs, setActiveQuery, activeQueryID, activePanelID} = this.props;
 
     return (
       <div>
@@ -57,6 +55,7 @@ const ExplorerList = React.createClass({
               onToggleExplorer={this.handleToggleExplorer}
               isExpanded={panelID === activePanelID}
               actions={allActions}
+              activeQueryID={activeQueryID}
             />
           );
         })}
