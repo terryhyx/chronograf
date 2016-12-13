@@ -6,7 +6,9 @@ import RenamePanelModal from './RenamePanelModal';
 
 const Explorer = React.createClass({
   propTypes: {
-    panel: PropTypes.shape({}).isRequired,
+    panel: PropTypes.shape({
+      id: PropTypes.string.isRequired,
+    }).isRequired,
     queries: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
     timeRange: PropTypes.shape({
       upper: PropTypes.string,
@@ -26,6 +28,7 @@ const Explorer = React.createClass({
       toggleTagAcceptance: PropTypes.func.isRequired,
       applyFuncsToField: PropTypes.func.isRequired,
       deletePanel: PropTypes.func.isRequired,
+      renamePanel: PropTypes.func.isRequired,
     }).isRequired,
     setActiveQuery: PropTypes.func.isRequired,
     activeQueryID: PropTypes.string,
@@ -54,7 +57,7 @@ const Explorer = React.createClass({
 
   getActiveQuery() {
     const {queries, activeQueryID} = this.props;
-    const activeQuery = queries.find((query) => query.id === this.props.activeQueryID);
+    const activeQuery = queries.find((query) => query.id === activeQueryID);
     const defaultQuery = queries[0];
 
     return activeQuery || defaultQuery;
